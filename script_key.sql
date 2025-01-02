@@ -420,6 +420,18 @@ WITH
     DuplicateRecords AS (
         SELECT *, ROW_NUMBER() OVER (
                 PARTITION BY
+                    MaKhachHang
+                ORDER BY MaSoThe DESC
+            ) as RowNum
+        FROM THETHANHVIEN
+    )
+DELETE FROM DuplicateRecords
+WHERE
+    RowNum > 1;
+WITH
+    DuplicateRecords AS (
+        SELECT *, ROW_NUMBER() OVER (
+                PARTITION BY
                     MaNhanVien
                 ORDER BY NgayBatDau DESC
             ) as RowNum
@@ -628,3 +640,25 @@ ALTER TABLE CHINHANH
 ADD CONSTRAINT FK_CHINHANH_QUANLY 
 FOREIGN KEY (QuanLyChiNhanh) REFERENCES NHANVIEN(MaNhanVien)
 ON DELETE SET NULL;
+
+--INDEX 
+CREATE NONCLUSTERED INDEX IX_MONAN_NonClusteredIndex_TenMon ON MONAN (TenMon);
+
+CREATE NONCLUSTERED INDEX IX_ThongTinPhieuDatMon_MaChiNhanh_STTBan
+ON THONGTINPHIEUDATMON (MaChiNhanh, STTBan);
+
+CREATE NONCLUSTERED INDEX IX_DATBAN_STTBan
+ON DATBAN (STTBan);
+
+CREATE NONCLUSTERED INDEX IX_DATBAN_NgayDat
+ON DATBAN (NgayDat);
+
+CREATE NONCLUSTERED INDEX IX_CHITIETPHIEUDATMON_MaMon
+ON CHITIETPHIEUDATMON (MaMon);
+
+CREATE NONCLUSTERED INDEX IX_HOADON_NgayLap
+ON HOADON (NgayLap);
+
+-- Create a non-clustered index on the MaPhieu column
+CREATE NONCLUSTERED INDEX IX_HOADON_MaPhieu
+ON HOADON (MaPhieu);
